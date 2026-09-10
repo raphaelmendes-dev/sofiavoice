@@ -11,7 +11,7 @@ import StatusBadge     from "@/components/SofiaVoice/StatusBadge";
 // SofiaVoicePage — Orquestrador Rs4Machine
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 export default function SofiaVoicePage() {
-  const { voiceState, logs, audioData, handleMicToggle } = useSofiaVoice();
+  const { voiceState, logs, audioData, metrics, handleMicToggle } = useSofiaVoice();
 
   return (
     <>
@@ -124,7 +124,7 @@ export default function SofiaVoicePage() {
           maxWidth:  "560px",
           animation: "stagger-in 0.6s ease-out 0.45s both",
         }}>
-          <TerminalLog logs={logs} />
+          <TerminalLog logs={logs} metrics={metrics} />
         </div>
 
         {/* ── FOOTER ── */}

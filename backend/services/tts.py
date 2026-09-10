@@ -1,30 +1,38 @@
+import io
 import base64
-import tempfile
-from pathlib import Path
-from gtts import gTTS
-
+import edge_tts
 
 class TTSService:
-    def synthesize(self, text: str) -> str | None:
+    def __init__(self, voice: str = "pt-BR-FranciscaNeural"):
         """
-        Recebe texto, retorna string base64 do mp3.
-        Usa gTTS — gratuito, PT-BR.
+        Vozes oficiais em português do Edge-TTS:
+          • pt-BR-FranciscaNeural (Feminina - Estável / Padrão)
+          • pt-BR-AntonioNeural (Masculino - Estável)
+        """
+        self.voice = voice
+
+    async def synthesize(self, text: str) -> str:
+        """
+        Gera o áudio MP3 de forma assíncrona e retorna em Base64.
         """
         if not text or not text.strip():
-            return None
+            return ""
 
         try:
-            tts = gTTS(text=text, lang="pt", slow=False)
+            communicate = edge_tts.Communicate(text, self.voice)
+            audio_stream = io.BytesIO()
 
-            with tempfile.NamedTemporaryFile(suffix=".mp3", delete=False) as tmp:
-                tts.save(tmp.name)
-                tmp_path = Path(tmp.name)
+            async for chunk in communicate.stream():
+                if chunk["type"] == "audio":
+                    audio_stream.write(chunk["data"])
 
-            audio_bytes = tmp_path.read_bytes()
-            tmp_path.unlink(missing_ok=True)
+            audio_bytes = audio_stream.getvalue()
+            if not audio_bytes:
+                print(f"[ERRO - TTSService (EdgeTTS)]: Nenhum byte de áudio retornado pela voz {self.voice}.")
+                return ""
 
             return base64.b64encode(audio_bytes).decode("utf-8")
 
         except Exception as e:
-            print(f"❌ Erro no TTS: {e}")
-            return None
+            print(f"[ERRO - TTSService (EdgeTTS)]: {e}")
+            return ""

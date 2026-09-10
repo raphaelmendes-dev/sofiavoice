@@ -83,3 +83,11 @@ body {
   0%, 100% { text-shadow: 0 0 10px #00f0ff88; }
   50%       { text-shadow: 0 0 24px #00f0ffcc, 0 0 48px #00f0ff44; }
 }
+
+/* Barras del visualizador en modo "speaking":
+   animadas 100% por CSS (determinista, sin JS por frame).
+   La altura se controla con scaleY + transformOrigin: bottom. */
+@keyframes bar-bounce {
+  0%, 100% { transform: scaleY(0.22); opacity: 0.45; }
+  50%      { transform: scaleY(1.2);  opacity: 1; }
+}

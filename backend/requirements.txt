@@ -1,6 +1,7 @@
-fastapi
-uvicorn[standard]
-python-multipart
-python-dotenv
-groq
-gTTS
+fastapi>=0.110.0
+uvicorn>=0.28.0
+groq>=0.4.2
+edge-tts>=7.2.8
+python-multipart>=0.0.9
+pydantic>=2.6.0
+python-dotenv>=1.0.1
