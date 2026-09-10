@@ -1,8 +1,0 @@
-groq
-python-dotenv
-gTTS
-pygame
-sounddevice
-scipy
-streamlit
-streamlit-mic-recorder

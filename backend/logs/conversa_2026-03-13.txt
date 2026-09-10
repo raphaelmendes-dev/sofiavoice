@@ -1,8 +1,0 @@
-============================================================
-[2026-03-13 18:12:00]
-👤 USUÁRIO:  Olá! Olá!
-🤖 SOFIA: Olá! Estou aqui para ajudar, como posso ser útil para você hoje?
-============================================================
-[2026-03-13 18:12:33]
-👤 USUÁRIO:  Quero um misture
-🤖 SOFIA: Você quer um mistério para resolver ou um jogo para jogar? Posso sugerir algumas opções, como um jogo de 20 perguntas ou um desafio de lógica!

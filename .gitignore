@@ -56,9 +56,10 @@ venv.bak/
 # Jupyter Notebook
 .ipynb_checkpoints
 
-# Logs (opcional: descomente se não quiser commitar logs)
-# logs/*.txt
-# *.log
+# Logs de conversa e runtime (os diretórios logs/ são ignorados;
+# backend/logs/.gitkeep preserva a estrutura de diretórios)
+logs/
+*.log
 
 # PyCharm
 .idea/
