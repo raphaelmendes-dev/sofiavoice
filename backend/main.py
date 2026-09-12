@@ -32,10 +32,18 @@ app = FastAPI(
     version="2.0.0",
 )
 
-# CORS restrito: apenas as origens do frontend local (sem wildcards)
+# ─────────────────────────────────────────────────────────────
+# CORS — Liberação de origens locais e de produção (Vercel)
+# ─────────────────────────────────────────────────────────────
+origins = [
+    "http://localhost:3000",
+    "http://127.0.0.1:3000",
+    "https://ai-voice-assistant-groq.vercel.app",  # Seu app em produção na Vercel
+]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000", "http://127.0.0.1:3000"],
+    allow_origins=origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
