@@ -47,8 +47,13 @@ async def transcribe(file: UploadFile = File(...)):
     text = stt.transcribe(audio_bytes, filename=file.filename or "audio.wav")
     t_stt = time.perf_counter() - t0
 
+    # v2.0: áudios em branco, ruídos sem fala ou webm curtos retornam texto
+    # vazio do STT — não é um erro de requisição. Em vez do HTTP 422, registra
+    # um log amigável de latência e devolve HTTP 200 OK com {"text": ""} para
+    # o frontend (Next.js/Vercel) tratar como "nenhuma fala detectada".
     if not text:
-        raise HTTPException(status_code=422, detail="Não foi possível transcrever o áudio.")
+        print(f"[LATÊNCIA - STT (Whisper)]: {t_stt:.3f}s (Sem fala detectada)")
+        return {"text": ""}
 
     # Sanitiza o texto transcrito pelo Whisper antes de devolver
     text_clean = sanitize_text(text)
