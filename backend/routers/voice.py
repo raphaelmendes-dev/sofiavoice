@@ -66,7 +66,7 @@ async def chat(body: ChatRequest):
     """[v2.0] Texto → respuesta IA (síncrono)."""
     # TODO (v3.0): Este endpoint queda como LEGACY aislado. En el flujo
     # streaming, la respuesta del LLM se emitirá por SSE/WebSocket token a
-    # token (Groq LLaMA stream=true) para render infraframes en el frontend.
+    # token (Groq gpt-oss-20b stream=true) para render infraframes en el frontend.
     t0 = time.perf_counter()
     clean_message = sanitize_text(body.message)
 

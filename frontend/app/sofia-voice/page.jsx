@@ -140,7 +140,7 @@ export default function SofiaVoicePage() {
           display:       "flex",
           gap:           "24px",
         }}>
-          {["FastAPI:8000", "Whisper:active", "LLaMA:active", "gTTS:active"].map((s, i) => (
+          {["FastAPI:8000", "Whisper:active", "gpt-oss-20b:active", "EdgeTTS:active"].map((s, i) => (
             <span key={i} style={{ opacity: 0.5 }}>{s}</span>
           ))}
         </div>

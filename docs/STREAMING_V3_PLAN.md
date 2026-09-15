@@ -32,7 +32,7 @@ Frontend                FastAPI (Render)            Groq Cloud
    │  Records audio (VAD)    │                          │
    ├── POST /api/transcribe ─▶│──▶ Whisper large-v3 ────▶│  (full audio)
    │  { "text": "..." }  ◀────│◀──── text                │
-   ├── POST /api/chat ───────▶│──▶ LLaMA (synchronous) ─▶│
+   ├── POST /api/chat ───────▶│──▶ openai/gpt-oss-20b (synchronous) ─▶│
    │  { "response": "..." } ◀─│◀──── full response        │
    ├── POST /api/speak ──────▶│──▶ EdgeTTS (BytesIO)     │
    │  { "audio_base64" }  ◀───│◀──── full MP3             │

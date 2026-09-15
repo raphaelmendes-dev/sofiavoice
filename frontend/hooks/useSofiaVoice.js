@@ -68,7 +68,7 @@ export function useSofiaVoice() {
     const bootLogs = [
       { type: "system", text: "Rs4Machine · Sofia v2.0 · inicializando..." },
       { type: "system", text: `Motor-Lite · FastAPI · ${API_URL}` },
-      { type: "system", text: "Whisper + LLaMA · Groq · carregados" },
+      { type: "system", text: "Whisper + gpt-oss-20b · Groq · carregados" },
       { type: "system", text: "VAD Dinâmico ativado · Limiar de silêncio: 1800ms" },
       { type: "system", text: "Sistema pronto · aguardando comando de voz" },
     ];

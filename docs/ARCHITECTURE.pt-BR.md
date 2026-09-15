@@ -29,7 +29,7 @@
 ```mermaid
 flowchart LR
     A["🎙️ Áudio do Usuário<br/>(Web Audio API)"] --> B["📝 STT<br/>Whisper V3"]
-    B --> C["🧠 LLM<br/>LLaMA 3.3 70B"]
+    B --> C["🧠 LLM<br/>openai/gpt-oss-20b"]
     C --> D["🔊 TTS<br/>Edge-TTS"]
     D --> E["📦 Resposta em<br/>Áudio Base64"]
 ```
@@ -47,7 +47,7 @@ A aplicação utiliza um **pipeline linear assíncrono** (STT → LLM → TTS), 
 ```text
 ÁUDIO DO USUÁRIO (Web Audio API)
     ──> STT (Whisper V3)
-    ──> LLM (LLaMA 3.3 70B)
+    ──> LLM (openai/gpt-oss-20b)
     ──> TTS (Edge-TTS)
     ──> RESPOSTA EM ÁUDIO BASE64
 ```
@@ -105,7 +105,7 @@ Processa o texto transcrito com contexto conversacional e retorna a resposta tex
 | Atributo | Especificação |
 |---|---|
 | **Provedor** | Groq API (Cliente Assíncrono) |
-| **Modelo** | LLaMA 3.3 70B Versatile |
+| **Modelo** | openai/gpt-oss-20b (via AsyncGroq) |
 | **Identidade do Sistema** | Sofia — Assistente Virtual da Rs4Machine |
 | **Gerenciamento de Contexto** | Memória de histórico isolada por sessão (previne vazamento de contexto) |
 | **Latência Média** | ~0.70 segundos |
@@ -157,7 +157,7 @@ Fornece a interface de interação do usuário: captura de áudio via Web Audio 
 2. Frontend dispara requisição POST com o arquivo de áudio para /api/voice
 3. Backend valida o tamanho do payload (< 10 MB) e sanitiza as entradas
 4. backend/services/stt.py invoca o Whisper V3 (Async) → Texto Transcrito
-5. backend/services/llm.py invoca o LLaMA 3.3 70B (Async) → Texto de Resposta
+5. backend/services/llm.py invoca o openai/gpt-oss-20b via AsyncGroq (Async) → Texto de Resposta
 6. backend/services/tts.py invoca o Edge-TTS (Async) → Áudio MP3 Neural → Base64
 7. Backend retorna a resposta JSON:
    {
@@ -178,7 +178,7 @@ Fornece a interface de interação do usuário: captura de áudio via Web Audio 
 ### ✅ Implementado (v2.0.0)
 
 - Pipeline puramente assíncrono STT → LLM → TTS
-- Upgrade para LLaMA 3.3 70B e Whisper Large V3 via Groq Async SDK
+- Upgrade para openai/gpt-oss-20b via Groq Async SDK (substituindo o baseline LLaMA 3.3 70B) + Whisper Large V3
 - Integração com Microsoft Edge-TTS (voz FranciscaNeural)
 - Política de CORS reforçada, Payload Guard de 10 MB e loggers seguros em UTF-8
 - Memória de contexto isolada por sessão

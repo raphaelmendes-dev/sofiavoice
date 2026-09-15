@@ -54,10 +54,10 @@ Production-grade AI voice assistant — listens, understands, and responds in re
 
 ## ⚡ Performance Benchmarks (v1.0 vs v2.0)
 
-| Metric / Stage | Baseline v1.0 (gTTS) | Production v2.0 (Edge-TTS) | Optimization Gain |
+| Metric / Stage | Baseline v1.0 (LLaMA 3.3 70B · gTTS) | Production v2.0 (openai/gpt-oss-20b · Edge-TTS) | Optimization Gain |
 |---|---|---|---|
 | **STT Latency (Whisper V3)** | ~0.84s | **~0.84s** | — |
-| **LLM Latency (LLaMA 3.3 70B)** | ~0.70s | **~0.70s** | — |
+| **LLM Latency (LLaMA 3.3 70B → openai/gpt-oss-20b)** | ~0.70s | **~0.70s** | — |
 | **TTS Engine Synthesis** | ~4.41s | **~1.60s – 2.50s** | **~40% faster** |
 | **Audio Payload Size** | 64.5 KB | **30.8 KB** | **52% smaller payload** |
 | **Execution Architecture** | Synchronous / Blocking | **Pure Async / Non-blocking** | Zero thread blocking |
@@ -90,7 +90,7 @@ ai-voice-assistant-groq/
     │   └── voice.py                 → Async voice pipeline routes
     └── services/
         ├── stt.py                   → Whisper Large v3 (Groq Async Client)
-        ├── llm.py                   → LLaMA 3.3 70B (Session-isolated context)
+        ├── llm.py                   → openai/gpt-oss-20b via AsyncGroq (Session-isolated context)
         └── tts.py                   → Edge-TTS (FranciscaNeural Engine)
 ```
 
@@ -104,7 +104,7 @@ ai-voice-assistant-groq/
 | **Styling** | CSS Modules / Tokens | Rs4Machine Design DNA System |
 | **Backend** | Python 3.14.2 + FastAPI | Asynchronous ASGI execution |
 | **Speech-to-Text** | Groq API | Whisper Large v3 |
-| **Intelligence** | Groq API | LLaMA 3.3 70B |
+| **Intelligence** | Groq API | openai/gpt-oss-20b (via AsyncGroq) |
 | **Text-to-Speech** | Edge-TTS | Microsoft Neural Voice (pt-BR-FranciscaNeural) |
 | **Deployment** | Vercel (FE) + Render (BE) | Production-ready CI/CD |
 

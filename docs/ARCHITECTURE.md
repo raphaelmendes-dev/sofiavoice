@@ -29,7 +29,7 @@
 ```mermaid
 flowchart LR
     A["🎙️ User Audio<br/>(Web Audio API)"] --> B["📝 STT<br/>Whisper V3"]
-    B --> C["🧠 LLM<br/>LLaMA 3.3 70B"]
+    B --> C["🧠 LLM<br/>openai/gpt-oss-20b"]
     C --> D["🔊 TTS<br/>Edge-TTS"]
     D --> E["📦 Base64 Audio<br/>Response"]
 ```
@@ -47,7 +47,7 @@ The application uses an **asynchronous linear pipeline** (STT → LLM → TTS) o
 ```text
 USER AUDIO (Web Audio API)
     ──> STT (Whisper V3)
-    ──> LLM (LLaMA 3.3 70B)
+    ──> LLM (openai/gpt-oss-20b)
     ──> TTS (Edge-TTS)
     ──> BASE64 AUDIO RESPONSE
 ```
@@ -105,7 +105,7 @@ Processes transcribed text with conversational context and returns the assistant
 | Attribute | Specification |
 |---|---|
 | **Provider** | Groq API (Async Client) |
-| **Model** | LLaMA 3.3 70B Versatile |
+| **Model** | openai/gpt-oss-20b (via AsyncGroq) |
 | **System Identity** | Sofia — Virtual Assistant by Rs4Machine |
 | **Context Management** | Session-isolated history memory (prevents context leakage) |
 | **Avg. Latency** | ~0.70 seconds |
@@ -157,7 +157,7 @@ Provides user interaction interface: audio capture via Web Audio API, real-time 
 2. Frontend dispatches POST request with audio file to /api/voice
 3. Backend validates payload size (< 10 MB) & sanitizes inputs
 4. backend/services/stt.py invokes Whisper V3 (Async) → Transcribed Text
-5. backend/services/llm.py invokes LLaMA 3.3 70B (Async) → Response Text
+5. backend/services/llm.py invokes openai/gpt-oss-20b via AsyncGroq (Async) → Response Text
 6. backend/services/tts.py invokes Edge-TTS (Async) → Neural MP3 Audio → Base64
 7. Backend returns JSON response:
    {
@@ -178,7 +178,7 @@ Provides user interaction interface: audio capture via Web Audio API, real-time 
 ### ✅ Implemented (v2.0.0)
 
 - Pure asynchronous pipeline STT → LLM → TTS
-- Upgrade to LLaMA 3.3 70B and Whisper Large V3 via Groq Async SDK
+- Upgrade to openai/gpt-oss-20b via Groq Async SDK (replacing the legacy LLaMA 3.3 70B baseline) + Whisper Large V3
 - Microsoft Edge-TTS integration (FranciscaNeural voice)
 - Hardened CORS policy, 10 MB Payload Guard, and UTF-8 safe loggers
 - Session-isolated context memory

@@ -54,10 +54,10 @@ Assistente de voz com IA de nível produção — ouve, compreende e responde em
 
 ## ⚡ Benchmarks de Performance (v1.0 vs v2.0)
 
-| Métrica / Etapa | Baseline v1.0 (gTTS) | Produção v2.0 (Edge-TTS) | Ganho de Otimização |
+| Métrica / Etapa | Baseline v1.0 (LLaMA 3.3 70B · gTTS) | Produção v2.0 (openai/gpt-oss-20b · Edge-TTS) | Ganho de Otimização |
 |---|---|---|---|
 | **Latência STT (Whisper V3)** | ~0.84s | **~0.84s** | — |
-| **Latência LLM (LLaMA 3.3 70B)** | ~0.70s | **~0.70s** | — |
+| **Latência LLM (LLaMA 3.3 70B → openai/gpt-oss-20b)** | ~0.70s | **~0.70s** | — |
 | **Síntese do Motor TTS** | ~4.41s | **~1.60s – 2.50s** | **~40% mais rápido** |
 | **Tamanho do Payload de Áudio** | 64.5 KB | **30.8 KB** | **52% menor** |
 | **Arquitetura de Execução** | Síncrona / Bloqueante | **Puramente Assíncrona** | Zero bloqueio de thread |
@@ -90,7 +90,7 @@ ai-voice-assistant-groq/
     │   └── voice.py                 → Rotas assíncronas do pipeline de voz
     └── services/
         ├── stt.py                   → Whisper Large v3 (Cliente Assíncrono Groq)
-        ├── llm.py                   → LLaMA 3.3 70B (Contexto isolado por sessão)
+        ├── llm.py                   → openai/gpt-oss-20b via AsyncGroq (Contexto isolado por sessão)
         └── tts.py                   → Edge-TTS (Motor FranciscaNeural)
 ```
 
@@ -104,7 +104,7 @@ ai-voice-assistant-groq/
 | **Estilização** | CSS Modules / Tokens | Rs4Machine Design DNA System |
 | **Backend** | Python 3.14.2 + FastAPI | Execução ASGI assíncrona |
 | **Speech-to-Text** | Groq API | Whisper Large v3 |
-| **Inteligência** | Groq API | LLaMA 3.3 70B |
+| **Inteligência** | Groq API | openai/gpt-oss-20b (via AsyncGroq) |
 | **Text-to-Speech** | Edge-TTS | Voz Neural Microsoft (pt-BR-FranciscaNeural) |
 | **Deploy** | Vercel (FE) + Render (BE) | CI/CD pronto para produção |
 
