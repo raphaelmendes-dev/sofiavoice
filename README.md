@@ -1,13 +1,13 @@
 <div align="center">
 <img src="assets/Rs4Machine.png" alt="Rs4Machine Logo" width="380" />
 
-# 🎙️ SofiaVoice — Rs4Machine
+# 🎙️ SofiaVoice v2.0 — Rs4Machine
 
 <img src="sofia-voice.gif" alt="SofiaVoice Demo" width="100%" />
 
-**Voice Intelligence System v2.0.0**
+**AI voice system for low-latency speech interaction**
 
-Production-grade AI voice assistant — listens, understands, and responds in real time with low latency.
+SofiaVoice is a public RS4 Lab experiment covering an asynchronous STT → LLM → TTS pipeline with session-isolated conversation handling.
 
 [![Live App](https://img.shields.io/badge/🚀-Live%20App-blue?style=for-the-badge)](https://ai-voice-assistant-groq.vercel.app)
 [![API Docs](https://img.shields.io/badge/📡-API%20Docs-informational?style=for-the-badge)](https://sofia-voice-backend.onrender.com/docs)
@@ -35,17 +35,23 @@ Production-grade AI voice assistant — listens, understands, and responds in re
 - [API Endpoints](#-api-endpoints)
 - [Contributing](#-contributing)
 - [License](#-license)
-- [Corporate & Research Contact](#-corporate--research-contact)
+- [Contact](#-contact)
 
 ---
 
 ## 🎯 Overview
 
-**SofiaVoice** is an autonomous voice intelligence system engineered by **Rs4Machine** under the **RS4 Lab** experiment framework. It enables full-duplex conversational AI by listening, transcribing, reasoning, and synthesizing natural neural speech in Brazilian Portuguese with minimal end-to-end latency.
+**SofiaVoice** is a voice-system experiment developed by **Rs4Machine** within the **RS4 Lab**. It implements a conversational pipeline that receives audio, transcribes it, generates a response, and synthesizes speech.
+
+The public v2.0 implementation focuses on asynchronous execution, a smaller audio payload, session-isolated state, and explicit API boundaries. The system is designed for measurement and iteration rather than opaque autonomy.
+
+**Official positioning:** AI Systems Engineer focused on hybrid architectures (LLM + deterministic logic) to eliminate hallucinations and ensure auditability in production.
+
+---
 
 ## ⚡ Key Improvements in v2.0.0
 
-- **Asynchronous Pipeline** — Full async execution (`AsyncGroq` + `Edge-TTS`) eliminating event loop blocks.
+- **Asynchronous Pipeline** — Full async execution (`AsyncGroq` + `Edge-TTS`) without blocking the event loop.
 - **Neural TTS Migration** — Replaced legacy `gTTS` with Microsoft `Edge-TTS` (FranciscaNeural), reducing audio payload sizes by **52%**.
 - **Hardened Security** — Strict CORS domain mapping, 10 MB payload limits (HTTP 413), and input sanitization against XSS.
 - **Session Isolation** — Independent conversation state handling per request session.
@@ -54,7 +60,7 @@ Production-grade AI voice assistant — listens, understands, and responds in re
 
 ## ⚡ Performance Benchmarks (v1.0 vs v2.0)
 
-| Metric / Stage | Baseline v1.0 (LLaMA 3.3 70B · gTTS) | Production v2.0 (openai/gpt-oss-20b · Edge-TTS) | Optimization Gain |
+| Metric / Stage | Baseline v1.0 (LLaMA 3.3 70B · gTTS) | v2.0 (openai/gpt-oss-20b · Edge-TTS) | Optimization Gain |
 |---|---|---|---|
 | **STT Latency (Whisper V3)** | ~0.84s | **~0.84s** | — |
 | **LLM Latency (LLaMA 3.3 70B → openai/gpt-oss-20b)** | ~0.70s | **~0.70s** | — |
@@ -66,32 +72,22 @@ Production-grade AI voice assistant — listens, understands, and responds in re
 
 ## 🏗️ Architecture
 
-```
-ai-voice-assistant-groq/
+```text
+sofiavoice/
 ├── frontend/                        → Next.js 15 (Vercel)
-│   ├── app/
-│   │   └── sofia-voice/
-│   │       └── page.jsx             → Main orchestrator
-│   ├── components/SofiaVoice/
-│   │   ├── VoiceVisualizer.jsx      → State-driven animated visualizer
-│   │   ├── MicButton.jsx            → Audio capture controller
-│   │   ├── TerminalLog.jsx          → Terminal-style real-time logs
-│   │   └── StatusBadge.jsx          → System status indicator
-│   ├── hooks/
-│   │   └── useSofiaVoice.js         → Web Audio API + API Client
-│   └── styles/
-│       └── sofia-voice.css          → Custom UI animations
+│   ├── app/sofia-voice/page.jsx     → Main orchestrator
+│   ├── components/SofiaVoice/       → Voice interface components
+│   ├── hooks/useSofiaVoice.js       → Web Audio API + API client
+│   └── styles/                      → Custom UI animations
 │
 └── backend/                         → Python 3.14 + FastAPI (Render)
-    ├── main.py                      → FastAPI instance, CORS & Security middleware
-    ├── config.py                    → Environment configurations
-    ├── requirements.txt             → Production dependencies (Edge-TTS, AsyncGroq)
-    ├── routers/
-    │   └── voice.py                 → Async voice pipeline routes
+    ├── main.py                      → FastAPI instance, CORS & security middleware
+    ├── config.py                    → Environment configuration
+    ├── routers/voice.py              → Async voice pipeline routes
     └── services/
-        ├── stt.py                   → Whisper Large v3 (Groq Async Client)
-        ├── llm.py                   → openai/gpt-oss-20b via AsyncGroq (Session-isolated context)
-        └── tts.py                   → Edge-TTS (FranciscaNeural Engine)
+        ├── stt.py                   → Whisper Large v3 via Groq
+        ├── llm.py                   → openai/gpt-oss-20b via AsyncGroq
+        └── tts.py                   → Edge-TTS (FranciscaNeural)
 ```
 
 ---
@@ -101,12 +97,12 @@ ai-voice-assistant-groq/
 | Layer | Technology | Specification |
 |---|---|---|
 | **Frontend** | Next.js 15 + React 19 | App Router + Web Audio API |
-| **Styling** | CSS Modules / Tokens | Rs4Machine Design DNA System |
+| **Styling** | CSS Modules / Tokens | Rs4Machine design system |
 | **Backend** | Python 3.14.2 + FastAPI | Asynchronous ASGI execution |
 | **Speech-to-Text** | Groq API | Whisper Large v3 |
-| **Intelligence** | Groq API | openai/gpt-oss-20b (via AsyncGroq) |
-| **Text-to-Speech** | Edge-TTS | Microsoft Neural Voice (pt-BR-FranciscaNeural) |
-| **Deployment** | Vercel (FE) + Render (BE) | Production-ready CI/CD |
+| **Intelligence** | Groq API | openai/gpt-oss-20b via AsyncGroq |
+| **Text-to-Speech** | Edge-TTS | Microsoft neural voice (pt-BR-FranciscaNeural) |
+| **Deployment** | Vercel (frontend) + Render (backend) | Public deployment |
 
 ---
 
@@ -139,7 +135,7 @@ Start the asynchronous API server:
 uvicorn main:app --reload --port 8000
 ```
 
-Interactive API documentation available at: `http://localhost:8000/docs`
+Interactive API documentation: `http://localhost:8000/docs`
 
 ### Frontend Setup
 
@@ -164,43 +160,42 @@ Open the application at: `http://localhost:3000/sofia-voice`
 | Method | Route | Description | Status Code |
 |---|---|---|---|
 | `GET` | `/health` | API operational check | `200 OK` |
-| `POST` | `/api/transcribe` | Audio file → Text transcription | `200 OK` / `400 Bad Request` |
+| `POST` | `/api/transcribe` | Audio file → text transcription | `200 OK` / `400 Bad Request` |
 | `POST` | `/api/chat` | Text prompt → AI response | `200 OK` / `400 Bad Request` |
-| `POST` | `/api/speak` | Text prompt → Neural Base64 audio | `200 OK` / `400 Bad Request` |
+| `POST` | `/api/speak` | Text prompt → neural Base64 audio | `200 OK` / `400 Bad Request` |
 | `POST` | `/api/voice` | Full end-to-end pipeline | `200 OK` / `413 Payload Too Large` |
 
 ---
 
 ## 🤝 Contributing
 
-Contributions, issues, and feature requests are welcome. Feel free to check the [issues page](https://github.com/raphaelmendes-dev) or open a pull request.
+Contributions, issues, and documentation improvements are welcome.
 
 1. Fork the project
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
+2. Create a feature branch (`git checkout -b feature/your-change`)
+3. Commit your changes using [Conventional Commits](https://www.conventionalcommits.org/)
+4. Push the branch (`git push origin feature/your-change`)
 5. Open a Pull Request
 
 ---
 
 ## 📄 License
 
-This project is licensed under the **MIT License** — see the [LICENSE](LICENSE) file for details.
+This project is licensed under the **MIT License** — see [LICENSE](LICENSE) for details.
 
 ---
 
-## 🏢 Corporate & Research Contact
+## 📬 Contact
 
-**Rs4Machine** — Autonomous Agents Systems & AI Research Lab
-
-**Founder / Lead Engineer:** Raphael Mendes
+**Raphael Mendes**  
+**AI Systems Engineer & Founder · Rs4Machine**
 
 - 📧 [python.dev.raphael@gmail.com](mailto:python.dev.raphael@gmail.com)
-- 🔗 GitHub: [github.com/raphaelmendes-dev](https://github.com/raphaelmendes-dev)
-- 🏢 LinkedIn Company: RS4Machine Lab
+- 🔗 [LinkedIn](https://www.linkedin.com/in/raphaelmendes-dev/)
+- 🌐 [Portfolio](https://portfolio-modular-rs4-machine.vercel.app/)
 
 <div align="center">
 
-*SofiaVoice v2.0.0 — September 2026*
+*SofiaVoice v2.0.0 · RS4 Lab · September 2026*
 
 </div>
